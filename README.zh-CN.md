@@ -27,9 +27,6 @@
     <span>简体中文</span>
 </p>
 
-# 演示
-
-在这里看演示: [Netlify Demo](https://vitesse-superslim.netlify.app/)
 
 # 新特性
 - 预封装了**主进程**和**渲染进程**的通信。
