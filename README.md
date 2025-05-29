@@ -25,10 +25,6 @@
     </span>
 </p>
 
-# Demo
-
-See demo at: [Netlify Demo](https://vitesse-superslim.netlify.app/)
-
 # New Features
 - Pre-wrapped **Main** and **Renderer** process communication.
 - More detailed electron-builder config.
