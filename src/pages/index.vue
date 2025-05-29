@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends any, O extends any">
+import { ipcRenderer } from 'electron';
 import packageJson from '../../package.json'
 import useNotification from '~/hooks/useNotification';
 import { sendMessageToMainProcess } from '~/utils/communication';
@@ -12,6 +13,18 @@ const { vite: viteVersion, electron: electronVersion } = packageJson.devDependen
 const name = ref('')
 
 const allowRunAtStartUp = ref<boolean>(false)
+
+// Initialize allowRunAtStartUp
+onMounted(() => {
+  sendMessageToMainProcess({
+    id: "get-login-config",
+  })
+})
+
+ipcRenderer.on("get-login-config-reply", (_, openAtLogin: boolean) => {
+  allowRunAtStartUp.value = openAtLogin
+})
+
 watch(() => allowRunAtStartUp.value, (newVal) => {
   sendMessageToMainProcess({
     id: "login-config",

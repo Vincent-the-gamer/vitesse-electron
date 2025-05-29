@@ -147,7 +147,7 @@ ipcMain.handle('open-win', (_, arg) => {
 })
 
 // Notification message
-ipcMain.on('notification', (event, msg: NotificationType) => {
+ipcMain.on('notification', (_, msg: NotificationType) => {
   createNotification({
     title: msg.title,
     body: msg.body
@@ -155,6 +155,13 @@ ipcMain.on('notification', (event, msg: NotificationType) => {
 })
 
 // Login message
-ipcMain.on("login-config",(event, msg: LoginConfig) => {
+// send run on login config to renderer
+ipcMain.on("get-login-config",(event, _) => {
+  const { openAtLogin } = app.getLoginItemSettings()
+  event.reply("get-login-config-reply", openAtLogin)
+})
+
+// set login config
+ipcMain.on("login-config",(_, msg: LoginConfig) => {
   configLogin(msg)
 })
