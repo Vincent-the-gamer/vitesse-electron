@@ -1,19 +1,29 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-import packageJson from "../../package.json"
-
-const { vite: viteVersion, electron: electronVersion } = packageJson.devDependencies
+import packageJson from '../../package.json'
+import useNotification from '~/hooks/useNotification';
 
 defineOptions({
   name: 'IndexPage',
 })
 
+const { vite: viteVersion, electron: electronVersion } = packageJson.devDependencies
+
 const name = ref('')
 
 const router = useRouter()
+
 function go() {
   if (name.value)
     router.push(`/hi/${encodeURIComponent(name.value)}`)
 }
+
+function testNotification() {
+  useNotification({
+    title: "Test Notification",
+    body: "Hello Vite + Electron"
+  })
+}
+
 </script>
 
 <template>
@@ -28,26 +38,24 @@ function go() {
     <p>
       <em text-sm op75>Vite + Electron starter template.</em>
     </p>
-    <h3 op75 m-1>Vite version: {{ viteVersion }}</h3>
-    <h3 op75 m-1>Electron version: {{ electronVersion }}</h3>
+    <h3 op75 m-1>
+      Vite version: {{ viteVersion }}
+    </h3>
+    <h3 op75 m-1>
+      Electron version: {{ electronVersion }}
+    </h3>
 
     <div py-4 />
 
-    <TheInput
-      v-model="name"
-      placeholder="What's your name?"
-      autocomplete="false"
-      @keydown.enter="go"
-    />
+    <TheInput v-model="name" placeholder="What's your name?" autocomplete="false" @keydown.enter="go" />
 
     <div>
-      <button
-        class="m-3 text-sm btn"
-        :disabled="!name"
-        @click="go"
-      >
+      <button class="m-3 text-sm btn" :disabled="!name" @click="go">
         Go
       </button>
+    </div>
+    <div>
+      <button btn m-3 text-sm @click="testNotification">Test Notification</button>
     </div>
   </div>
 </template>

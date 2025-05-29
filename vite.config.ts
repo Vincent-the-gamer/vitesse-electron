@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import path from 'node:path'
 import Vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
@@ -10,7 +9,7 @@ import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
 import Electron from 'vite-plugin-electron'
 import ElectronRenderer from 'vite-plugin-electron-renderer'
-import pkgJson from "./package.json"
+import pkgJson from './package.json'
 
 export default defineConfig({
   server: {
@@ -62,7 +61,7 @@ export default defineConfig({
         entry: 'electron/main/index.ts',
         onstart(options) {
           if (process.env.VSCODE_DEBUG)
-          // eslint-disable-next-line no-console
+
             console.log(/* For `.vscode/.debug.script.mjs` */'[startup] Electron App')
           else
             options.startup()
@@ -97,10 +96,9 @@ export default defineConfig({
     ]),
     ElectronRenderer({
       resolve: {
-        serialport: { type: "cjs" },
-        got: { type: "esm" },
+        serialport: { type: 'cjs' },
+        got: { type: 'esm' },
       },
-    })
-
+    }),
   ],
 })

@@ -2,7 +2,8 @@ import { release } from 'node:os'
 import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Menu } from 'electron'
+import { createNotification, NotificationType } from './notification'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -83,7 +84,26 @@ async function createWindow() {
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 
-app.whenReady().then(createWindow)
+// macOS Only: set dock menu
+const dockMenu = Menu.buildFromTemplate([
+  {
+    label: 'New Window',
+    click () { console.log('New Window') }
+  }, {
+    label: 'New Window with Settings',
+    submenu: [
+      { label: 'Basic' },
+      { label: 'Pro' }
+    ]
+  },
+  { label: 'New Command...' }
+])
+
+app.whenReady()
+   .then(() => {
+     app.dock?.setMenu(dockMenu)
+   })
+   .then(createWindow)
 
 app.on('window-all-closed', () => {
   win = null
@@ -123,4 +143,12 @@ ipcMain.handle('open-win', (_, arg) => {
 
   else
     childWindow.loadFile(indexHtml, { hash: arg })
+})
+
+// Notification
+ipcMain.on('notification', (event, msg: NotificationType) => {
+  createNotification({
+    title: msg.title,
+    body: msg.body
+  })
 })
