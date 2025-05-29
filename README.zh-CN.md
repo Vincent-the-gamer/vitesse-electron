@@ -31,7 +31,11 @@
 
 在这里看演示: [Netlify Demo](https://vitesse-superslim.netlify.app/)
 
-# 特性
+# 新特性
+- 预封装了**主进程**和**渲染进程**的通信。
+- 更详细的electron-builder配置。
+
+# 继承的特性
 
 参考[Vitesse-lite](https://github.com/antfu/vitesse-lite)项目.
 

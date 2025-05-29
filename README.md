@@ -29,7 +29,11 @@
 
 See demo at: [Netlify Demo](https://vitesse-superslim.netlify.app/)
 
-# Features
+# New Features
+- Pre-wrapped **Main** and **Renderer** process communication.
+- More detailed electron-builder config.
+
+# Inherited Features
 
 See [Vitesse-lite](https://github.com/antfu/vitesse-lite).
 
