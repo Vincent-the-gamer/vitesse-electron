@@ -1,5 +1,5 @@
 <p align="center">
-    <img src=".github/preview.png"/>
+    <img src=".github/window.png"/>
 </p>
 
 <h1 align="center">
@@ -8,7 +8,7 @@
 
 <p align="center">
     <b>
-        <i>Vitesse + Electron模板</i>
+        <i>Vite + Electron模板</i>
     </b>
 </p>
 
