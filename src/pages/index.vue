@@ -19,6 +19,7 @@ function go() {
 <template>
   <div>
     <div i-carbon-campsite inline-block text-4xl />
+    <div i-ion:logo-electron inline-block text-4xl />
     <p>
       <a rel="noreferrer" href="https://github.com/Vincent-the-gamer/vitesse-electron" target="_blank">
         Vitesse Electron

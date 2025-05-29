@@ -48,8 +48,8 @@ const indexHtml = join(process.env.DIST, 'index.html')
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Vitesse Electron',
-    width: 1280,
-    height: 720,
+    width: 960,
+    height: 540,
     icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
