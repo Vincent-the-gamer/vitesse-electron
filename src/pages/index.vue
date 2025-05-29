@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import packageJson from '../../package.json'
 import useNotification from '~/hooks/useNotification';
+import { sendMessageToMainProcess } from '~/utils/communication';
 
 defineOptions({
   name: 'IndexPage',
@@ -9,6 +10,20 @@ defineOptions({
 const { vite: viteVersion, electron: electronVersion } = packageJson.devDependencies
 
 const name = ref('')
+
+const allowRunAtStartUp = ref<boolean>(false)
+watch(() => allowRunAtStartUp.value, (newVal) => {
+  sendMessageToMainProcess({
+    id: "login-config",
+    message: {
+      openAtLogin: newVal
+    }
+  })
+  useNotification({
+    title: "Run At Login",
+    body: "You have set run at login to: " + newVal
+  })
+})
 
 const router = useRouter()
 
@@ -57,5 +72,9 @@ function testNotification() {
     <div>
       <button btn m-3 text-sm @click="testNotification">Test Notification</button>
     </div>
+    <div>
+      Allow 「run at startup」: <input type="checkbox" v-model="allowRunAtStartUp"/>
+    </div>
+
   </div>
 </template>

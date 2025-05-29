@@ -3,7 +3,8 @@ import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { app, BrowserWindow, ipcMain, shell, Menu } from 'electron'
-import { createNotification, NotificationType } from './notification'
+import { configLogin, createNotification } from './actions'
+import type { NotificationType, LoginConfig } from 'types'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -145,10 +146,15 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg })
 })
 
-// Notification
+// Notification message
 ipcMain.on('notification', (event, msg: NotificationType) => {
   createNotification({
     title: msg.title,
     body: msg.body
   })
+})
+
+// Login message
+ipcMain.on("login-config",(event, msg: LoginConfig) => {
+  configLogin(msg)
 })
