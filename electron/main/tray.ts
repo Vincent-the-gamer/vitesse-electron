@@ -12,21 +12,25 @@ export function useTray(win: BrowserWindow) {
     tray = new Tray(trayIcon)
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: "Quit App",
-            type: "normal",
+            label: "Show Main Window",
             click: () => {
+                win.show()
+            }
+        },
+        {
+            label: "Hide Main Window",
+            click: () => {
+                win.hide()
+            }
+        },
+        {
+            label: "Quit App",
+            click: () => {
+                win.destroy()
                 app.quit()
             }
         }
     ])
     tray.setToolTip("Vitesse Electron")
     tray.setContextMenu(contextMenu)
-
-    tray.on("click", (event) => {
-        win?.show()
-    })
-
-    tray.on("right-click", () => {
-        tray?.popUpContextMenu(contextMenu)
-    })
 }

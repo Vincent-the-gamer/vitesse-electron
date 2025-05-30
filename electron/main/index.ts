@@ -47,9 +47,11 @@ let win: BrowserWindow | null = null
 export const url = process.env.VITE_DEV_SERVER_URL
 export const indexHtml = join(process.env.DIST, 'index.html')
 
+const title = 'Vitesse Electron'
+
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Vitesse Electron',
+    title,
     width: 960,
     height: 540,
     icon: join(process.env.PUBLIC, 'favicon.ico'),
@@ -68,6 +70,14 @@ async function createWindow() {
     win?.show()
   })
 
+  win.on("blur", () => {
+    win?.setTitle("Ciallo~(∠・ω< )⌒★!")
+  })
+
+  win.on("focus", () => {
+    win?.setTitle(title)
+  })
+
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url as string)
     // Open devTool if the app is not packaged
@@ -76,6 +86,11 @@ async function createWindow() {
   else {
     win.loadFile(indexHtml)
   }
+
+  win.on("close", (event) => {
+    event.preventDefault()
+    win?.hide()
+  })
 
   // Test actively push message to the Electron-Renderer
   win.webContents.on('did-finish-load', () => {
@@ -108,18 +123,18 @@ const dockMenu = Menu.buildFromTemplate([
 
 app.whenReady()
   .then(() => {
-    // Tray
-    useTray(win!)
-    
     // macOS: Dock
     app.dock?.setMenu(dockMenu)
   })
-  .then(createWindow)
+  .then(() => {
+    createWindow()
+    // Tray
+    useTray(win!)
+  })
 
 app.on('window-all-closed', () => {
   win = null
-  // if (process.platform !== 'darwin')
-  //   app.quit()
+  app.quit()
 })
 
 app.on('second-instance', () => {
