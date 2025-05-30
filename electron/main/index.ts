@@ -2,9 +2,9 @@ import { release } from 'node:os'
 import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { app, BrowserWindow, ipcMain, shell, Menu } from 'electron'
-import { configLogin, createNotification } from './actions'
-import type { NotificationType, LoginConfig } from 'types'
+import { app, BrowserWindow, shell, Menu } from 'electron'
+import { useTray } from './tray'
+import { useIpcMain } from './ipcMain'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -44,8 +44,8 @@ if (!app.requestSingleInstanceLock()) {
 // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 let win: BrowserWindow | null = null
-const url = process.env.VITE_DEV_SERVER_URL
-const indexHtml = join(process.env.DIST, 'index.html')
+export const url = process.env.VITE_DEV_SERVER_URL
+export const indexHtml = join(process.env.DIST, 'index.html')
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -60,6 +60,12 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    show: false,
+  })
+
+  // trick: show window only after page is loaded
+  win.once("ready-to-show", () => {
+    win?.show()
   })
 
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
@@ -89,7 +95,7 @@ async function createWindow() {
 const dockMenu = Menu.buildFromTemplate([
   {
     label: 'New Window',
-    click () { console.log('New Window') }
+    click() { console.log('New Window') }
   }, {
     label: 'New Window with Settings',
     submenu: [
@@ -101,15 +107,19 @@ const dockMenu = Menu.buildFromTemplate([
 ])
 
 app.whenReady()
-   .then(() => {
-     app.dock?.setMenu(dockMenu)
-   })
-   .then(createWindow)
+  .then(() => {
+    // Tray
+    useTray(win!)
+    
+    // macOS: Dock
+    app.dock?.setMenu(dockMenu)
+  })
+  .then(createWindow)
 
 app.on('window-all-closed', () => {
   win = null
-  if (process.platform !== 'darwin')
-    app.quit()
+  // if (process.platform !== 'darwin')
+  //   app.quit()
 })
 
 app.on('second-instance', () => {
@@ -130,38 +140,5 @@ app.on('activate', () => {
     createWindow()
 })
 
-// New window example arg: new windows url
-ipcMain.handle('open-win', (_, arg) => {
-  const childWindow = new BrowserWindow({
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  })
-
-  if (process.env.VITE_DEV_SERVER_URL)
-    childWindow.loadURL(`${url}#${arg}`)
-
-  else
-    childWindow.loadFile(indexHtml, { hash: arg })
-})
-
-// Notification message
-ipcMain.on('notification', (_, msg: NotificationType) => {
-  createNotification({
-    title: msg.title,
-    body: msg.body
-  })
-})
-
-// Login message
-// send run on login config to renderer
-ipcMain.on("get-login-config",(event, _) => {
-  const { openAtLogin } = app.getLoginItemSettings()
-  event.reply("get-login-config-reply", openAtLogin)
-})
-
-// set login config
-ipcMain.on("login-config",(_, msg: LoginConfig) => {
-  configLogin(msg)
-})
+// ipcMain handlers
+useIpcMain()
