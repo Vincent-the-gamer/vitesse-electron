@@ -2,9 +2,10 @@ import { release } from 'node:os'
 import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { app, BrowserWindow, shell, Menu } from 'electron'
+import { app, BrowserWindow, nativeImage, shell } from 'electron'
 import { useTray } from './tray'
 import { useIpcMain } from './ipcMain'
+import { dockMenu, useApplicationMenu } from './menu'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -106,30 +107,22 @@ async function createWindow() {
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 
-// macOS Only: set dock menu
-const dockMenu = Menu.buildFromTemplate([
-  {
-    label: 'New Window',
-    click() { console.log('New Window') }
-  }, {
-    label: 'New Window with Settings',
-    submenu: [
-      { label: 'Basic' },
-      { label: 'Pro' }
-    ]
-  },
-  { label: 'New Command...' }
-])
+const appPath = app.getAppPath()
+const iconPath = join(appPath, "./icons/tray.png")
+const dockIcon = nativeImage.createFromPath(iconPath)
 
 app.whenReady()
   .then(() => {
     // macOS: Dock
     app.dock?.setMenu(dockMenu)
+    app.dock?.setIcon(dockIcon)
   })
   .then(() => {
     createWindow()
     // Tray
     useTray(win!)
+    // Menu
+    useApplicationMenu(win!)
   })
 
 app.on('window-all-closed', () => {

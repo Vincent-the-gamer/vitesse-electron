@@ -12,19 +12,22 @@ export function useTray(win: BrowserWindow) {
     tray = new Tray(trayIcon)
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: "Show Main Window",
+            label: "Show",
+            accelerator: "CmdOrCtrl+O",
             click: () => {
                 win.show()
             }
         },
         {
-            label: "Hide Main Window",
+            label: "Hide",
+            accelerator: "CmdOrCtrl+W",
             click: () => {
                 win.hide()
             }
         },
         {
             label: "Quit App",
+            accelerator: "CmdOrCtrl+Q",
             click: () => {
                 win.destroy()
                 app.quit()
