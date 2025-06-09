@@ -1,5 +1,5 @@
 {
-  "appId": "YourAppID",
+  "appId": "com.vincent.gamer",
   "productName": "Vitesse Electron",
   "asar": true,
   "icon": "public/favicon.ico",
@@ -8,15 +8,17 @@
   },
   "files": [
     "dist-electron",
-    "dist"
+    "dist",
   ],
   "mac": {
+    "icon": "./icons/icns-large.icns",
     "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"
     ]
   },
   "win": {
+    "icon": "./icons/icon-large.ico",
     "target": [
       {
         "target": "nsis",
@@ -53,5 +55,8 @@
     "allowToChangeInstallationDirectory": true,
     "deleteAppDataOnUninstall": false,
     "displayLanguageSelector": true
-  }
+  },
+  "extraFiles": [
+    "./icons"
+  ]
 }

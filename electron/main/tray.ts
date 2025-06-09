@@ -1,10 +1,13 @@
 import { app, Menu, Tray, nativeImage, BrowserWindow } from 'electron'
 import { join } from 'node:path'
+import { useAppPath } from './appPath'
 
-const appPath = app.getAppPath()
+const appPath = useAppPath()
 
 let tray: Tray | null = null
-const iconPath = join(appPath, "./icons/tray.png")
+const iconPath = process.platform === "win32" ? 
+                  join(appPath, './icons/icon-small.ico') : 
+                  join(appPath, './icons/tray.png')
 const trayIcon = nativeImage.createFromPath(iconPath)
 
 export function useTray(win: BrowserWindow) {

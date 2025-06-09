@@ -6,6 +6,7 @@ import { app, BrowserWindow, nativeImage, shell } from 'electron'
 import { useTray } from './tray'
 import { useIpcMain } from './ipcMain'
 import { dockMenu, useApplicationMenu } from './menu'
+import { useAppPath } from './appPath'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -107,7 +108,7 @@ async function createWindow() {
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 
-const appPath = app.getAppPath()
+const appPath = useAppPath()
 const iconPath = join(appPath, "./icons/tray.png")
 const dockIcon = nativeImage.createFromPath(iconPath)
 
